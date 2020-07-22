@@ -250,20 +250,20 @@ private:
 		return nullptr;
 	}
 
-	void clear(node* root)
+	void clear(node* n)
 	{
-		if (root->left != nullptr)
+		if (n->left != nullptr)
 		{
-			clear(root->left);
+			clear(n->left);
 		}
 
-		if (root->right != nullptr)
+		if (n->right != nullptr)
 		{
-			clear(root->right);
+			clear(n->right);
 		}
 
-		delete root;
-		root = nullptr;
+		delete n;
+		n = nullptr;
 	}
 
 private:
@@ -289,7 +289,8 @@ public:
 
 	void clear()
 	{
-
+		clear(root);
+		root = nullptr;
 	}
 
 	void remove(TKey key)

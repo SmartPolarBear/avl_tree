@@ -2,6 +2,7 @@
 //
 
 #include <iostream>
+#include <crtdbg.h>
 
 #include "avl_tree.h"
 
@@ -47,11 +48,24 @@ void test_avl()
 			cout << "Verify removed value by key OK:" << i << endl;
 		}
 	}
+
+	for (int i = 0; i < 100; i += 2)
+	{
+		tree[i] = test_s{ i,i * i, i * i * i };
+	}
+
+	tree.clear();
+
+	for (int i = 0; i < 100; i += 2)
+	{
+		tree[i] = test_s{ i,i * i, i * i * i };
+	}
 }
 
 int main()
 {
-	
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	test_avl();
 
 	return 0;
