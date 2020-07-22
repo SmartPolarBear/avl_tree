@@ -1,10 +1,13 @@
-#pragma once
+// POJ3481.cpp : This file contains the 'main' function. Program execution begins and ends there.
+//
+#define  _CRT_SECURE_NO_WARNINGS
+#include <cstdio>
 #include <cstdint>
 #include <algorithm>
 
-using std::max;
+using namespace std;
 
-template<typename TKey, typename TData>
+template<class TKey, class TData>
 class AVLTree
 {
 private:
@@ -19,7 +22,7 @@ private:
 
 	inline int subtree_height(node* n)
 	{
-		if (n == nullptr)
+		if (n == NULL)
 		{
 			return 0;
 		}
@@ -36,8 +39,8 @@ private:
 		n->key = key;
 		n->data = data;
 
-		n->left = nullptr;
-		n->right = nullptr;
+		n->left = NULL;
+		n->right = NULL;
 		n->height = 1;
 
 		return n;
@@ -73,7 +76,7 @@ private:
 
 	inline int balance_factor(node* n)
 	{
-		if (n == nullptr)
+		if (n == NULL)
 		{
 			return 0;
 		}
@@ -92,7 +95,7 @@ private:
 
 	node* insert(node* root, TKey key, TData data)
 	{
-		if (root == nullptr)
+		if (root == NULL)
 		{
 			return new_node(key, data);
 		}
@@ -116,7 +119,7 @@ private:
 		root->height = max(subtree_height(root->left), subtree_height(root->right)) + 1;
 
 		// balance the tree
-		auto factor = balance_factor(root);
+		int factor = balance_factor(root);
 
 		// left left
 		if (factor > 1 && root->left && key < root->left->key)
@@ -151,7 +154,7 @@ private:
 
 	node* remove(node* root, TKey key)
 	{
-		if (root == nullptr)
+		if (root == NULL)
 		{
 			return root;
 		}
@@ -166,13 +169,13 @@ private:
 		}
 		else
 		{
-			if (root->left == nullptr || root->right == nullptr)
+			if (root->left == NULL || root->right == NULL)
 			{
 				node* victim = root->left ? root->left : root->right;
-				if (victim == nullptr)
+				if (victim == NULL)
 				{
 					victim = root;
-					root = nullptr;
+					root = NULL;
 				}
 				else
 				{
@@ -190,14 +193,14 @@ private:
 			}
 		}
 
-		if (root == nullptr)
+		if (root == NULL)
 		{
 			return root;
 		}
 
 		root->height = max(subtree_height(root->left), subtree_height(root->right)) + 1;
 
-		auto factor = balance_factor(root);
+		int factor = balance_factor(root);
 
 		// Left Left Case  
 		if (factor > 1 && balance_factor(root->left) >= 0)
@@ -247,30 +250,69 @@ private:
 			}
 		}
 
-		return nullptr;
+		return NULL;
 	}
 
 	void clear(node* root)
 	{
-		if (root->left != nullptr)
+		if (root->left != NULL)
 		{
 			clear(root->left);
 		}
 
-		if (root->right != nullptr)
+		if (root->right != NULL)
 		{
 			clear(root->right);
 		}
 
 		delete root;
-		root = nullptr;
+		root = NULL;
+	}
+
+	void print_max(node* n)
+	{
+		if (n == NULL)
+		{
+			printf("0\n");
+			return;
+		}
+
+		node* iter = n;
+		while (iter->right)
+		{
+			iter = iter->right;
+		}
+
+
+		printf("%d\n", iter->data);
+		remove(iter->key);
+
+	}
+
+	void print_min(node* n)
+	{
+		if (n == NULL)
+		{
+			printf("0\n");
+			return;
+		}
+
+		node* iter = n;
+		while (iter->left)
+		{
+			iter = iter->left;
+		}
+
+		printf("%d\n", iter->data);
+		remove(iter->key);
+
 	}
 
 private:
 	node* root;
 
 public:
-	AVLTree() :root(nullptr)
+	AVLTree() :root(NULL)
 	{
 
 	}
@@ -278,7 +320,7 @@ public:
 	~AVLTree()
 	{
 		clear();
-		root = nullptr;
+		root = NULL;
 	}
 
 
@@ -299,10 +341,10 @@ public:
 
 	TData& find(TKey key)
 	{
-		auto node = find(root, key);
-		if (node == nullptr)
+		node* node = find(root, key);
+		if (node == NULL)
 		{
-			insert(key, {});
+			insert(key, TData());
 			node = find(root, key);
 		}
 
@@ -313,4 +355,44 @@ public:
 	{
 		return find(key);
 	}
+
+	void print_min()
+	{
+		print_min(root);
+	}
+
+	void print_max()
+	{
+		print_max(root);
+	}
 };
+
+AVLTree< unsigned long long, int> tree;
+int main()
+{
+	for (;;)
+	{
+		int c = 0;
+		scanf("%d", &c);
+		if (c == 1)
+		{
+			int k = 0;
+			unsigned long long p = 0;
+			scanf("%d %lld", &k, &p);
+			tree.insert(p, k);
+		}
+		else if (c == 2)
+		{
+			tree.print_max();
+		}
+		else if (c == 3)
+		{
+			tree.print_min();
+		}
+		else if (c == 0)
+		{
+			break;
+		}
+	}
+	return 0;
+}

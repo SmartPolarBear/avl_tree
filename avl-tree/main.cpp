@@ -17,7 +17,6 @@ void test_avl()
 {
 	AVLTree<int, test_s> tree;
 
-	std::cout << "Hello World!\n";
 	for (int i = 0; i < 100; i += 2)
 	{
 		tree[i] = test_s{ i,i * i, i * i * i };
