@@ -4,13 +4,15 @@
 
 using std::max;
 
-template<typename T>
+template<typename TKey, typename TData>
 class AVLTree
 {
 private:
 	struct node
 	{
-		T key;
+		TKey key;
+		TData data;
+
 		size_t height;
 		node* left, * right;
 	};
@@ -27,10 +29,13 @@ private:
 		}
 	}
 
-	inline node* new_node(T key)
+	inline node* new_node(TKey key, TData data)
 	{
 		node* n = new node;
+
 		n->key = key;
+		n->data = data;
+
 		n->left = nullptr;
 		n->right = nullptr;
 		n->height = 1;
@@ -54,7 +59,7 @@ private:
 
 	inline node* left_rotate(node* x)
 	{
-		node* y = x->left;
+		node* y = x->right;
 		node* t2 = y->left;
 
 		y->left = x;
@@ -78,27 +83,27 @@ private:
 
 	inline node* min_node(node* root)
 	{
-		node& current = root;
+		node* current = root;
 		while (current->left)
 			current = current->left;
 
 		return current;
 	}
 
-	node* insert(node* root, T key)
+	node* insert(node* root, TKey key, TData data)
 	{
 		if (root == nullptr)
 		{
-			return new_node(key);
+			return new_node(key, data);
 		}
 
 		if (key < root->key)
 		{
-			root->left = insert(root->left, key);
+			root->left = insert(root->left, key, data);
 		}
-		else if (key > node->key)
+		else if (key > root->key)
 		{
-			root->right = insert(root->right, key);
+			root->right = insert(root->right, key, data);
 		}
 		else
 		{
@@ -144,7 +149,7 @@ private:
 
 	}
 
-	node* remove(node* root, T key)
+	node* remove(node* root, TKey key)
 	{
 		if (root == nullptr)
 		{
@@ -203,7 +208,7 @@ private:
 		// Left Right Case  
 		if (factor > 1 && balance_factor(root->left) < 0)
 		{
-			root->left = leftRotate(root->left);
+			root->left = left_rotate(root->left);
 			return right_rotate(root);
 		}
 
@@ -216,14 +221,14 @@ private:
 		// Right Left Case  
 		if (factor < -1 && balance_factor(root->right) > 0)
 		{
-			root->right = rightRotate(root->right);
+			root->right = right_rotate(root->right);
 			return left_rotate(root);
 		}
 
 		return root;
 	}
 
-	node* find(node* root, T key)
+	node* find(node* root, TKey key)
 	{
 		node* iter = root;
 		while (iter)
@@ -236,7 +241,7 @@ private:
 			{
 				iter = iter->left;
 			}
-			else if(key < iter->key)
+			else if (key == iter->key)
 			{
 				return iter;
 			}
@@ -244,5 +249,68 @@ private:
 
 		return nullptr;
 	}
+
+	void clear(node* root)
+	{
+		if (root->left != nullptr)
+		{
+			clear(root->left);
+		}
+
+		if (root->right != nullptr)
+		{
+			clear(root->right);
+		}
+
+		delete root;
+		root = nullptr;
+	}
+
+private:
+	node* root;
+
 public:
+	AVLTree() :root(nullptr)
+	{
+
+	}
+
+	~AVLTree()
+	{
+		clear();
+		root = nullptr;
+	}
+
+
+	void insert(TKey key, TData data)
+	{
+		root = insert(root, key, data);
+	}
+
+	void clear()
+	{
+
+	}
+
+	void remove(TKey key)
+	{
+		root = remove(root, key);
+	}
+
+	TData& find(TKey key)
+	{
+		auto node = find(root, key);
+		if (node == nullptr)
+		{
+			insert(key, {});
+			node = find(root, key);
+		}
+
+		return node->data;
+	}
+
+	TData& operator[](TKey key)
+	{
+		return find(key);
+	}
 };

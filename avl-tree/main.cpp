@@ -5,15 +5,55 @@
 
 #include "avl_tree.h"
 
+using namespace std;
+
 struct test_s
 {
-    int a, b, c;
+	int a, b, c;
 };
 
-AVLTree<test_s> tree;
+
+void test_avl()
+{
+	AVLTree<int, test_s> tree;
+
+	std::cout << "Hello World!\n";
+	for (int i = 0; i < 100; i += 2)
+	{
+		tree[i] = test_s{ i,i * i, i * i * i };
+	}
+
+	for (int i = 0; i < 100; i += 2)
+	{
+		if (tree[i].a == i && tree[i].b == i * i && tree[i].c == i * i * i)
+		{
+			cout << "Verify value by key OK:" << i << endl;
+		}
+	}
+
+	for (int i = 1; i < 100; i += 2)
+	{
+		if (tree[i].a == 0 && tree[i].b == 0 && tree[i].c == 0)
+		{
+			cout << "Verify uninserted value by key OK:" << i << endl;
+		}
+	}
+
+	for (int i = 0; i < 100; i += 2)
+	{
+		tree.remove(i);
+
+		if (tree[i].a == 0 && tree[i].b == 0 && tree[i].c == 0)
+		{
+			cout << "Verify removed value by key OK:" << i << endl;
+		}
+	}
+}
 
 int main()
 {
-    std::cout << "Hello World!\n";
-    return 0;
+	
+	test_avl();
+
+	return 0;
 }
