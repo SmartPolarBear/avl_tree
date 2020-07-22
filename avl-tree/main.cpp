@@ -17,11 +17,15 @@ struct test_s
 void test_avl()
 {
 	AVLTree<int, test_s> tree;
+	size_t count = 0;
 
 	for (int i = 0; i < 100; i += 2)
 	{
+		count++;
 		tree[i] = test_s{ i,i * i, i * i * i };
 	}
+
+	_ASSERT(tree.size() == count);
 
 	for (int i = 0; i < 100; i += 2)
 	{
@@ -33,11 +37,14 @@ void test_avl()
 
 	for (int i = 1; i < 100; i += 2)
 	{
+		count++;
 		if (tree[i].a == 0 && tree[i].b == 0 && tree[i].c == 0)
 		{
 			cout << "Verify uninserted value by key OK:" << i << endl;
 		}
 	}
+
+	_ASSERT(tree.size() == count);
 
 	for (int i = 0; i < 100; i += 2)
 	{
@@ -55,6 +62,9 @@ void test_avl()
 	}
 
 	tree.clear();
+
+	_ASSERT(tree.size() == 0);
+
 
 	for (int i = 0; i < 100; i += 2)
 	{

@@ -94,6 +94,7 @@ private:
 	{
 		if (root == nullptr)
 		{
+			m_size++;
 			return new_node(key, data);
 		}
 
@@ -179,6 +180,7 @@ private:
 					*root = *victim;
 				}
 
+				m_size--;
 				delete victim;
 			}
 			else
@@ -268,9 +270,10 @@ private:
 
 private:
 	node* root;
+	size_t m_size;
 
 public:
-	AVLTree() :root(nullptr)
+	AVLTree() :root(nullptr), m_size(0)
 	{
 
 	}
@@ -278,7 +281,6 @@ public:
 	~AVLTree()
 	{
 		clear();
-		root = nullptr;
 	}
 
 
@@ -291,6 +293,7 @@ public:
 	{
 		clear(root);
 		root = nullptr;
+		m_size = 0;
 	}
 
 	void remove(TKey key)
@@ -313,5 +316,10 @@ public:
 	TData& operator[](TKey key)
 	{
 		return find(key);
+	}
+
+	size_t size()
+	{
+		return m_size;
 	}
 };
